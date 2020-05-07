@@ -1,9 +1,10 @@
-from tkinter.filedialog import askopenfilename
+from tkinter.filedialog import askopenfilename, asksaveasfile
 
 from src.model.XlsxToSql import XlsxToSql
 from tkinter import *
 from tkinter import font
 import unidecode
+import codecs
 
 
 class ControllerHomeScreen:
@@ -111,6 +112,10 @@ class ControllerHomeScreen:
                     sql = sql + query + '\n'
 
                 self.homeScreen.insert_sql(sql)
+                self.file_save(sql)
+                #file = codecs.open("backup.sql", "w", "utf-8")
+                #file.write(sql)
+                #file.close()
             else:
                 self.homeScreen.message('Alerta', 'Você precisa adicionar o nome da tabela!')
 
@@ -127,3 +132,10 @@ class ControllerHomeScreen:
             return value
         except:
             return "'" + str(value) + "'"
+
+    def file_save(self, sql):
+        f = asksaveasfile(mode='w', defaultextension=".sql", filetypes=(("SQL", ".sql"), ("All files", "*.*")))
+        if f is None:
+            return
+        f.write(sql)
+        f.close()
