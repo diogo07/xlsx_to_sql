@@ -1,12 +1,15 @@
 from tkinter import *
 from tkinter.filedialog import askopenfilename
 
+from src.controller.ControllerHomeScreen import ControllerHomeScreen
+
 class HomeScreen(Frame):
 
     def __init__(self, width, height, title):
         Frame.__init__(self, master=None)
         self.master.title(title)
         self.set_geometry(width, height)
+        self.controllerHomeScreen = ControllerHomeScreen(self)
 
         self.lb_arquivo = Label(self.master, text="Selecione o arquivo:")
         self.lb_arquivo.place(x=10, y=25)
@@ -14,7 +17,7 @@ class HomeScreen(Frame):
         self.ent_arquivo = Text(self.master, height=1, width=60)
         self.ent_arquivo.place(x=10, y=50)
 
-        self.btn_arquivo = Button(self.master, text="...", width = 10, height=1, command=self.browse_xlsx)
+        self.btn_arquivo = Button(self.master, text="...", width = 10, height=1, command=self.controllerHomeScreen.open_browser)
         self.btn_arquivo.place(x=500, y=47)
 
         self.lb_campos = Label(self.master, text="Campos:")
@@ -23,21 +26,16 @@ class HomeScreen(Frame):
         self.lbx_campos = Listbox(self.master, selectmode='multiple', height=15, width=40)
         self.lbx_campos.place(x=10, y=125)
 
-        #self.rightBT3.curselection() pegar os valores selecionados
+        self.lb_campos_sql = Label(self.master, text="Campos do SQL:")
+        self.lb_campos_sql.place(x=320, y=100)
 
-        self.lbx_campos.insert(END, "a list entry")
-        self.lbx_campos.insert(END, "a list entry")
-
-        self.lbx_campos_sql = Label(self.master, text="Campos do SQL:")
-        self.lbx_campos_sql.place(x=320, y=100)
-
-        self.lbx_campos_sql = Listbox(self.master, height=15, width=40)
+        self.lbx_campos_sql = Listbox(self.master, selectmode='multiple', height=15, width=20)
         self.lbx_campos_sql.place(x=320, y=125)
 
-        self.btn_add_campo = Button(self.master, text=">>>")
+        self.btn_add_campo = Button(self.master, text=">>>", command=self.controllerHomeScreen.add_fields)
         self.btn_add_campo.place(x=270, y= 200)
 
-        self.btn_remove_campo = Button(self.master, text="<<<")
+        self.btn_remove_campo = Button(self.master, text="<<<", command=self.controllerHomeScreen.remove_field)
         self.btn_remove_campo.place(x=270, y=250)
 
         self.btn_gerar = Button(self.master, text = "gerar")
