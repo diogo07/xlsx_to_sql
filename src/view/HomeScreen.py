@@ -49,11 +49,11 @@ class HomeScreen(Frame):
         self.btn_gerar = Button(self.master, text = "gerar", command=self.controllerHomeScreen.generate_sql)
         self.btn_gerar.place(x = 180, y= 390, width=100)
 
-        self.btn_limpar = Button(self.master, text="limpar")
+        self.btn_limpar = Button(self.master, text="limpar", command=self.controllerHomeScreen.btnClear)
         self.btn_limpar.place(x=290, y=390, width=100)
 
-        self.lbl_saida = Text(self.master, height=8, width=70)
-        self.lbl_saida.place(x=10, y=450)
+        self.txt_saida = Text(self.master, height=8, width=70)
+        self.txt_saida.place(x=10, y=450)
 
 
     def set_geometry(self, width, height):
@@ -71,4 +71,4 @@ class HomeScreen(Frame):
         ctypes.windll.user32.MessageBoxW(0, description, title, 1)
 
     def insert_sql(self, sql):
-        self.lbl_saida.insert(END, sql)
+        self.txt_saida.insert(END, sql)

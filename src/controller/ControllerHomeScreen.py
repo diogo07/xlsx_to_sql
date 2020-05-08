@@ -75,7 +75,10 @@ class ControllerHomeScreen:
                 return True
         return False
 
-    def clearFields(self):
+    def btnClear(self):
+        self.clearFields(type=1)
+
+    def clearFields(self, type):
         self.homeScreen.lbx_campos.delete(0, END)
         self.homeScreen.lbx_campos_sql.delete(0, END)
         self.list_fields = []
@@ -84,11 +87,20 @@ class ControllerHomeScreen:
             del field
         self.x_position = 450
         self.y_position = 125
+        self.homeScreen.txt_saida.delete(1.0, "end-1c")
+        self.homeScreen.text_table.delete(1.0, "end-1c")
+        if type==1:
+            self.homeScreen.ent_arquivo.delete(1.0, "end-1c")
+
 
     def read_file(self, filename):
-        self.clearFields()
+        self.clearFields(type=0)
 
         xlsxToSql = XlsxToSql(filename)
+
+        data = xlsxToSql.process_file()
+        print(data.head())
+
         self.data = xlsxToSql.process_file()
         for d in self.data:
             self.homeScreen.lbx_campos.insert(END, d)
@@ -97,16 +109,20 @@ class ControllerHomeScreen:
         if self.list_fields.__len__() > 0:
             nome_tabela = self.homeScreen.text_table.get("1.0", 'end-1c')
             if nome_tabela.__len__() > 0:
-                self.homeScreen.lbl_saida.delete('1.0', END)
+                self.homeScreen.txt_saida.delete('1.0', END)
                 sql = ''
                 for index_data in range(self.data.__len__()):
                     query = 'INSERT INTO '+nome_tabela+' ('
                     values = ' VALUES ('
 
                     for index_field in range(self.list_fields.__len__()):
-                        field_data = self.data[self.list_fields[index_field]]
-                        query = query + "'"+self.clean_field(self.list_edit[index_field].get())+"', "
-                        values = values + str(self.get_value_type(field_data[index_data])) +', '
+                        if self.list_edit[index_field].get()!='':
+                            field_data = self.data[self.list_fields[index_field]]
+                            query = query + "'"+self.clean_field(self.list_edit[index_field].get())+"', "
+                            values = values + str(self.get_value_type(field_data[index_data])) +', '
+                        else:
+                            self.homeScreen.message('Alerta', 'Há campos editados em branco nos nomes das colunas!')
+                            return
 
                     query = query[:-2] + ') ' + values[:-2] + ');'
                     sql = sql + query + '\n'
